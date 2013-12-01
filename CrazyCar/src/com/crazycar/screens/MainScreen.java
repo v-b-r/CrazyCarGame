@@ -41,8 +41,8 @@ public class MainScreen implements Screen, InputProcessor{
 	@Override
 	public void show() {
 		// TODO Auto-generated method stub
-		this.width = 320;
-		this.height = 480;
+		this.width = Gdx.graphics.getWidth();
+		this.height = Gdx.graphics.getHeight();
 		world = new World();                   // World height is defined here
 		renderer = new WorldRenderer(world,width,height);
 		controller = new WorldController(world);
@@ -76,10 +76,10 @@ public class MainScreen implements Screen, InputProcessor{
 	@Override
 	public boolean keyDown(int keycode) {
 		// TODO Auto-generated method stub
-        if (keycode == Keys.LEFT)
-            controller.leftPressed();
-        if (keycode == Keys.RIGHT)
-            controller.rightPressed();
+        if (keycode == Keys.UP)
+            controller.upPressed();
+        if (keycode == Keys.DOWN)
+            controller.downPressed();
         if (keycode == Keys.Z)
             controller.jumpPressed();
         if (keycode == Keys.X)
@@ -90,11 +90,11 @@ public class MainScreen implements Screen, InputProcessor{
 	@Override
 	public boolean keyUp(int keycode) {
 		// TODO Auto-generated method stub
-        if (keycode == Keys.LEFT){
-            controller.leftReleased();
+        if (keycode == Keys.UP){
+            controller.upReleased();
             }
-        if (keycode == Keys.RIGHT){
-            controller.rightReleased();
+        if (keycode == Keys.DOWN){
+            controller.downReleased();
         }
         if (keycode == Keys.Z)
             controller.jumpReleased();
@@ -113,10 +113,10 @@ public class MainScreen implements Screen, InputProcessor{
 	public boolean touchDown(int x, int y, int pointer, int button) {
 		// TODO Auto-generated method stub
 		if (x < width / 2 && y > height / 2) {
-            controller.leftPressed();
+            controller.upPressed();
         }
         if (x > width / 2 && y > height / 2) {
-            controller.rightPressed();
+            controller.downPressed();
         }
         return true;
 	}
@@ -125,10 +125,10 @@ public class MainScreen implements Screen, InputProcessor{
 	public boolean touchUp(int x, int y, int pointer, int button) {
 		// TODO Auto-generated method stub
 		if (x < width / 2 && y > height / 2) {
-            controller.leftReleased();
+            controller.upReleased();
         }
         if (x > width / 2 && y > height / 2) {
-            controller.rightReleased();
+            controller.downReleased();
         }
         return true;
 	}

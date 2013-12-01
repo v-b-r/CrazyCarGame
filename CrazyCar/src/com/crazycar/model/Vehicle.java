@@ -22,7 +22,7 @@ public class Vehicle {
 
 	Vector2 	position = new Vector2();
 	Vector2 	acceleration = new Vector2();
-	Vector2 	velocity = new Vector2(10,0);
+	Vector2 	velocity = new Vector2(0,0);
 	Rectangle 	bounds = new Rectangle();
 	State		state = State.IDLE;
 	

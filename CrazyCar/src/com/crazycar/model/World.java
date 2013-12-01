@@ -1,5 +1,6 @@
 package com.crazycar.model;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 
@@ -15,10 +16,10 @@ public class World {
 		this.width = 320;
 		this.height = 1200;
 		CarCam = new OrthographicCamera();  
-		CarCam.viewportHeight = 480;  
-		CarCam.viewportWidth = 320;
+		CarCam.viewportHeight = Gdx.graphics.getHeight();  
+		CarCam.viewportWidth = Gdx.graphics.getWidth();
 		CarCam.update(); 
-		System.out.format("cam width is %f and cam height is %f\n",CarCam.viewportWidth,CarCam.viewportHeight);
+//		System.out.format("cam width is %f and cam height is %f\n",CarCam.viewportWidth,CarCam.viewportHeight);
 	}
 
 	public Vehicle getUserCar() {
