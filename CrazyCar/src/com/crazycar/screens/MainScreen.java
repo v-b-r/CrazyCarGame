@@ -116,10 +116,12 @@ public class MainScreen implements Screen, InputProcessor{
             controller.upPressed();
         if (keycode == Keys.DOWN)
             controller.downPressed();
+        if (keycode == Keys.LEFT)
+            controller.leftPressed();
+        if (keycode == Keys.RIGHT)
+            controller.rightPressed();
         if (keycode == Keys.Z)
             controller.jumpPressed();
-        if (keycode == Keys.X)
-            controller.firePressed();
         return true;
 	}
 
@@ -132,10 +134,14 @@ public class MainScreen implements Screen, InputProcessor{
         if (keycode == Keys.DOWN){
             controller.downReleased();
         }
+        if (keycode == Keys.LEFT){
+            controller.leftReleased();
+        }
+        if (keycode == Keys.RIGHT){
+            controller.rightReleased();
+        }
         if (keycode == Keys.Z)
             controller.jumpReleased();
-        if (keycode == Keys.X)
-            controller.fireReleased();
         return true;
 	}
 
