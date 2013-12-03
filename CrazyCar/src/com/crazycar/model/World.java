@@ -15,9 +15,7 @@ public class World {
 		this.UserCar = new Vehicle(new Vector2(0, 0));
 		this.width = 320;
 		this.height = 1200;
-		CarCam = new OrthographicCamera();  
-		CarCam.viewportHeight = Gdx.graphics.getHeight();  
-		CarCam.viewportWidth = Gdx.graphics.getWidth();
+		CarCam = new OrthographicCamera(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 		CarCam.update(); 
 //		System.out.format("cam width is %f and cam height is %f\n",CarCam.viewportWidth,CarCam.viewportHeight);
 	}

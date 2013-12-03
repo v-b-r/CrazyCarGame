@@ -5,8 +5,16 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.crazycar.controller.WorldController;
-import com.crazycar.model.World;
 import com.crazycar.view.WorldRenderer;
 
 
@@ -17,6 +25,7 @@ public class MainScreen implements Screen, InputProcessor{
 	private WorldController controller;
 	private int width;
 	private int height;
+	public OrthographicCamera cam;
 	
 	@Override
 	public void render(float delta) {
@@ -26,27 +35,54 @@ public class MainScreen implements Screen, InputProcessor{
         controller.update(delta);
 		renderer.render();
 		
+		Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
+		debugRenderer.render(world, cam.combined);
+		world.step(1/60f, 6, 2);
+		
 	}
 
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
 		renderer.setSize(width, height);
-		world.setCarCamViewport(width,height);
+		this.setCarCamViewport(width,height);
 //		System.out.println(width);
         this.width = width;
         this.height = height;
+	}
+	
+	public void setCarCamViewport(int width, int height) {
+		// TODO Auto-generated method stub
+		this.cam.viewportWidth = width;
+		this.cam.viewportHeight = height;
+		this.cam.update();
 	}
 
 	@Override
 	public void show() {
 		// TODO Auto-generated method stub
+		cam = new OrthographicCamera(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+		cam.update();
 		this.width = Gdx.graphics.getWidth();
 		this.height = Gdx.graphics.getHeight();
-		world = new World();                   // World height is defined here
-		renderer = new WorldRenderer(world,width,height);
+		world = new World(new Vector2(0, 0)	,false);                   // World height is defined here
+        BodyDef bodyDef = new BodyDef();  
+        bodyDef.type = BodyType.DynamicBody;  
+        bodyDef.position.set(0,0);//camera.viewportWidth / 2, camera.viewportHeight / 2);  
+        Body body = world.createBody(bodyDef);
+        PolygonShape dynamicVehicle = new PolygonShape();
+        dynamicVehicle.setAsBox(50, 50, new Vector2(0, 0), 0.0f);
+        FixtureDef fixtureDef = new FixtureDef();  
+        fixtureDef.shape = dynamicVehicle;  
+        fixtureDef.density = 1.0f;  
+        fixtureDef.friction = 0.0f;  
+        fixtureDef.restitution = 0.5f;  
+        body.createFixture(fixtureDef); 
+		body.setBullet(true);
+		renderer = new WorldRenderer(world,cam,width,height);
 		controller = new WorldController(world);
 		Gdx.input.setInputProcessor(this);
+		dynamicVehicle.dispose();
 	}
 
 	@Override

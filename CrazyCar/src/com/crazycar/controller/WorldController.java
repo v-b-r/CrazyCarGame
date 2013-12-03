@@ -5,9 +5,10 @@ import java.util.Map;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.World;
 import com.crazycar.model.Vehicle;
 import com.crazycar.model.Vehicle.State;
-import com.crazycar.model.World;
 import com.crazycar.view.WorldRenderer;
 
 public class WorldController {
@@ -15,7 +16,7 @@ public class WorldController {
 		UP, DOWN, JUMP, FIRE
 	}
 	private World world;
-	private Vehicle UserCar;
+	private Body userCar;
 
 	static Map<Keys, Boolean> keys = new HashMap<WorldController.Keys, Boolean>();
 	static {
@@ -27,7 +28,7 @@ public class WorldController {
 
 	public WorldController(World world) {
 		this.world = world;
-		this.UserCar = world.getUserCar();
+		this.userCar = this.world.getBodies().next();
 	}
 
 	// ** Key presses and touches **************** //
@@ -67,34 +68,35 @@ public class WorldController {
 	/** The main update method **/
 	public void update(float delta) {
 		processInput(delta);
-		UserCar.update(delta);
+//		userCar.applyForceToCenter(new Vector2(0,delta));
 	}
 
 	/** Change Bob's state and parameters based on input controls **/
 	private void processInput(float delta) {
 		if (keys.get(Keys.UP)) {
 			// up is pressed
-			UserCar.setState(State.MOVING);
-			UserCar.getVelocity().y = -Vehicle.SPEED;
-			this.world.CarCam.translate(UserCar.getVelocity().cpy().mul(-1));
+//			userCar.setState(State.MOVING);
+			userCar.setLinearVelocity(0, 80);
+//			this.world.CarCam.translate(UserCar.getVelocity().cpy().mul(-1));
 //			System.out.format("velocity value is %f and delta is %f\n",UserCar.getVelocity().x,delta);
-			this.world.CarCam.update();
+//			this.world.CarCam.update();
 		}
 		if (keys.get(Keys.DOWN)) {
 			// up is pressed
-			UserCar.setState(State.MOVING);
-			UserCar.getVelocity().y = Vehicle.SPEED;
-			this.world.CarCam.translate(UserCar.getVelocity().cpy().mul(-1));
-			this.world.CarCam.update();
+//			userCar.setState(State.MOVING);
+//			userCar.setLinearVelocity(0, -80);
+			userCar.setLinearDamping((float)5);
+//			this.world.CarCam.translate(UserCar.getVelocity().cpy().mul(-1));
+//			this.world.CarCam.update();
 		}
 		// need to check if both or none direction are pressed, then Bob is idle
 		if ((keys.get(Keys.UP) && keys.get(Keys.DOWN)) ||
 				(!keys.get(Keys.UP) && !(keys.get(Keys.DOWN)))) {
-			UserCar.setState(State.IDLE);
+			userCar.setLinearDamping((float)1);
 			// acceleration is 0 on the x
 			//UserCar.getAcceleration().x = 0;
 			// horizontal speed is 0
-			UserCar.getVelocity().y = 0;
+//			userCar.getVelocity().y = 0;
 		}
 	}
 }

@@ -16,7 +16,7 @@ public class Vehicle {
 		IDLE, MOVING, JUMPING, DYING
 	}
 
-	public static final float SPEED = 2f;	// unit per second
+	public static final float SPEED = 100f;	// unit per second
 	static final float JUMP_VELOCITY = 1f;
 	static final float SIZE = 0.5f; // half a unit
 
@@ -26,7 +26,7 @@ public class Vehicle {
 	Rectangle 	bounds = new Rectangle();
 	State		state = State.IDLE;
 	
-    World world;
+    public World world;
     public OrthographicCamera camera; 
 
 	public Vehicle(Vector2 position) {
@@ -41,7 +41,7 @@ public class Vehicle {
 //        camera.position.set(camera.viewportWidth * .5f, camera.viewportHeight * .5f, 0f);  
 //        camera.update();  
 		
-        //Dynamic Body  // Not use yet
+        //Dynamic Body  // Not used yet
         BodyDef bodyDef = new BodyDef();  
         bodyDef.type = BodyType.DynamicBody;  
         bodyDef.position.set(0,0);//camera.viewportWidth / 2, camera.viewportHeight / 2);  

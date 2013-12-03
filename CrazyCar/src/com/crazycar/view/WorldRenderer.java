@@ -1,7 +1,13 @@
 package com.crazycar.view;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import com.crazycar.model.Vehicle;
-import com.crazycar.model.World;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -15,12 +21,12 @@ import com.badlogic.gdx.math.Vector3;
 
 public class WorldRenderer {
 	
-	private static final float CAMERA_WIDTH = 10f;
-	private static final float CAMERA_HEIGHT = 7f;
+	private float CamWidth;
+	private float CamHeight;
 
 	private World world;
 	private OrthographicCamera cam;
-	private SpriteBatch spriteBatch;
+//	private SpriteBatch spriteBatch;
 	/** for debug rendering **/
 	ShapeRenderer debugRenderer = new ShapeRenderer();
 
@@ -30,51 +36,55 @@ public class WorldRenderer {
 	public void setSize (int w, int h) {
 //		this.world.width = w;
 //		this.world.height = h;
-//		System.out.println(this.world.width);
-//		System.out.println(this.world.height);
-		ppuX = (float)this.world.width/ CAMERA_WIDTH;
-		ppuY = (float)this.world.height/ CAMERA_HEIGHT;
+		ppuX = (float)320/ CamWidth;
+		ppuY = (float)1200/ CamHeight;
+		System.out.println(ppuX);
+		System.out.println(ppuY);
 	}
 	
-	public WorldRenderer(World world,int w,int h) {
+	public WorldRenderer(World world,OrthographicCamera camera,int w,int h) {
 		this.world = world;
-		cam = this.world.CarCam;
-		
+		cam = camera;
+		this.CamHeight = cam.viewportHeight;
+		this.CamWidth = cam.viewportWidth;
 //		this.cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 //		this.cam.position.set(Gdx.graphics.getWidth()/4, Gdx.graphics.getHeight()/4, 0);
 //		this.cam.update();
 		this.ppuX = 1;
 		this.ppuY = 1;
-		this.spriteBatch = new SpriteBatch();
-		blockTexture = new Texture(Gdx.files.internal("images/block.png"));
+//		this.spriteBatch = new SpriteBatch();
+//		blockTexture = new Texture(Gdx.files.internal("images/block.png"));
 	}
 
 	public void render() {
 		Texture.setEnforcePotImages(false);
 		
-		Vehicle UserCar = world.getUserCar();
-		Rectangle rect = UserCar.getBounds();
-		float x1 = UserCar.getPosition().x + rect.x;
-		float y1 = UserCar.getPosition().y + rect.y;
+		Iterator<Body> Bodies = world.getBodies();
+//		int bodyCount = world.getBodyCount();
+		Body userCar = Bodies.next();
+		ArrayList<Fixture> fixtures= userCar.getFixtureList();
+		float x1 = userCar.getPosition().x;
+		float y1 = userCar.getPosition().y;
 //		Vector2 pos = UserCar.getPosition();
 //		Vector3 camPos = cam.position;
-//		cam.translate(camPos.x-pos.x,camPos.y-pos.y,camPos.z);
+//		cam.translate(x1-camPos.x,y1-camPos.y,0);
+		cam.position.set(x1, y1+100, 0);
 		cam.update();
-		
+
 		debugRenderer.setProjectionMatrix(cam.combined);
-		spriteBatch.setProjectionMatrix(cam.combined);
+//		spriteBatch.setProjectionMatrix(cam.combined);
 		// render User's car
 		
 		debugRenderer.setColor(Color.RED);
 		debugRenderer.begin(ShapeType.FilledRectangle);
-		debugRenderer.filledRect(50, 0, 2 * ppuX, 2 * ppuY);
+		debugRenderer.filledRect(-150, 0, 300, 300);
 		debugRenderer.setColor(Color.BLUE);
-		debugRenderer.filledRect(100, 0, 2 * ppuX, 2 * ppuY);
+		debugRenderer.filledRect(150, 0, 300, 300);
 		debugRenderer.end();
 		
-		spriteBatch.begin();
-		spriteBatch.draw(blockTexture, UserCar.getPosition().x * ppuX, UserCar.getPosition().y * ppuY, 2 * ppuX, 2 * ppuY);
+//		spriteBatch.begin();
+//		spriteBatch.draw(blockTexture, userCar.getPosition().x-50, userCar.getPosition().y, (float)100,(float)100);
 //		spriteBatch.draw(blockTexture, UserCar.getPosition().x * ppuX, UserCar.getPosition().y * ppuY, x1/2 * ppuX, y1/2 * ppuY);
-		spriteBatch.end();
+//		spriteBatch.end();
 	}
 }
